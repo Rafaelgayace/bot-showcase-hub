@@ -1,26 +1,515 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- TODO: Set the document title to the name of your application -->
-    <title>Lovable App</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusBot - O Bot Definitivo para Discord</title>
+  <meta name="description" content="Moderação inteligente, comandos divertidos, sistema de welcome, logs completos e muito mais. Tudo em um único bot gratuito e poderoso.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+          },
+          colors: {
+            background: 'hsl(228 15% 8%)',
+            foreground: 'hsl(210 40% 98%)',
+            card: 'hsl(228 15% 12%)',
+            primary: 'hsl(235 86% 65%)',
+            'primary-foreground': 'hsl(210 40% 98%)',
+            secondary: 'hsl(228 15% 18%)',
+            muted: 'hsl(228 15% 20%)',
+            'muted-foreground': 'hsl(215 20% 65%)',
+            accent: 'hsl(174 72% 56%)',
+            'accent-foreground': 'hsl(228 15% 8%)',
+            border: 'hsl(228 15% 20%)',
+            destructive: 'hsl(0 84% 60%)',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            'pulse-glow': {
+              '0%, 100%': { opacity: '0.2' },
+              '50%': { opacity: '0.4' },
+            },
+            'fade-up': {
+              '0%': { opacity: '0', transform: 'translateY(20px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+          },
+          animation: {
+            float: 'float 6s ease-in-out infinite',
+            'pulse-glow': 'pulse-glow 4s ease-in-out infinite',
+            'fade-up': 'fade-up 0.6s ease-out forwards',
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body {
+      background-color: hsl(228 15% 8%);
+      color: hsl(210 40% 98%);
+      font-family: 'Outfit', sans-serif;
+    }
+    .text-gradient {
+      background: linear-gradient(to right, hsl(235 86% 65%), hsl(174 72% 56%));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .glass {
+      background: hsla(228, 15%, 12%, 0.5);
+      backdrop-filter: blur(24px);
+      border: 1px solid hsla(228, 15%, 20%, 0.5);
+    }
+    .hover-lift {
+      transition: all 0.3s ease;
+    }
+    .hover-lift:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -20px rgba(0,0,0,0.5);
+    }
+    .btn-hero {
+      background: linear-gradient(135deg, hsl(235 86% 65%), hsl(235 86% 55%));
+      box-shadow: 0 0 30px hsla(235, 86%, 65%, 0.4), 0 10px 30px -10px hsla(235, 86%, 65%, 0.5);
+      transition: all 0.3s ease;
+    }
+    .btn-hero:hover {
+      box-shadow: 0 0 40px hsla(235, 86%, 65%, 0.5), 0 15px 40px -10px hsla(235, 86%, 65%, 0.6);
+      transform: translateY(-2px);
+    }
+    .btn-glass {
+      background: hsla(228, 15%, 12%, 0.5);
+      backdrop-filter: blur(24px);
+      border: 1px solid hsla(228, 15%, 20%, 0.5);
+      transition: all 0.3s ease;
+    }
+    .btn-glass:hover {
+      background: hsla(228, 15%, 18%, 0.6);
+    }
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    .animate-pulse-glow {
+      animation: pulse-glow 4s ease-in-out infinite;
+    }
+    .animate-fade-up {
+      animation: fade-up 0.6s ease-out forwards;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 0.4; }
+    }
+    @keyframes fade-up {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .section-padding {
+      padding: 5rem 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .section-padding {
+        padding: 5rem 3rem;
+      }
+    }
+    @media (min-width: 1024px) {
+      .section-padding {
+        padding: 5rem 6rem;
+      }
+    }
+  </style>
+</head>
+<body class="antialiased">
+  <!-- Navbar -->
+  <nav class="fixed top-0 left-0 right-0 z-50 glass">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <a href="#" class="flex items-center gap-2">
+          <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+            <svg class="w-6 h-6 text-primary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <span class="text-xl font-bold text-foreground">NexusBot</span>
+        </a>
+        
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#features" class="text-muted-foreground hover:text-foreground transition-colors font-medium">Recursos</a>
+          <a href="#how-it-works" class="text-muted-foreground hover:text-foreground transition-colors font-medium">Como funciona</a>
+          <a href="#" class="text-muted-foreground hover:text-foreground transition-colors font-medium">Suporte</a>
+        </div>
+        
+        <div class="hidden md:block">
+          <a href="#" class="btn-hero inline-flex items-center gap-2 px-6 py-3 rounded-xl text-primary-foreground font-semibold">
+            Adicionar ao Discord
+          </a>
+        </div>
+        
+        <button id="mobile-menu-btn" class="md:hidden text-foreground">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div id="mobile-menu" class="hidden md:hidden pt-4 pb-2">
+        <a href="#features" class="block py-3 text-muted-foreground hover:text-foreground transition-colors font-medium">Recursos</a>
+        <a href="#how-it-works" class="block py-3 text-muted-foreground hover:text-foreground transition-colors font-medium">Como funciona</a>
+        <a href="#" class="block py-3 text-muted-foreground hover:text-foreground transition-colors font-medium">Suporte</a>
+        <a href="#" class="btn-hero flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-primary-foreground font-semibold mt-4">
+          Adicionar ao Discord
+        </a>
+      </div>
+    </div>
+  </nav>
 
-    <!-- TODO: Update og:title to match your application name -->
-    <meta property="og:title" content="Lovable App" />
-    <meta property="og:description" content="Lovable Generated Project" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+  <!-- Hero Section -->
+  <section class="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
+    <div class="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none"></div>
+    <div class="absolute top-20 left-1/4 w-96 h-96 bg-primary/30 rounded-full blur-3xl opacity-20 animate-pulse-glow"></div>
+    <div class="absolute bottom-20 right-1/4 w-80 h-80 bg-accent/30 rounded-full blur-3xl opacity-20 animate-pulse-glow" style="animation-delay: 1s;"></div>
+    
+    <div class="max-w-6xl mx-auto px-6 text-center relative z-10">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8 animate-fade-up">
+        <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+        </svg>
+        <span class="text-sm text-muted-foreground">
+          Mais de <span class="text-foreground font-semibold">15.000 servidores</span> já confiam
+        </span>
+      </div>
+      
+      <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 animate-fade-up" style="animation-delay: 100ms;">
+        O bot definitivo para<br>
+        <span class="text-gradient">seu servidor Discord</span>
+      </h1>
+      
+      <p class="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-up" style="animation-delay: 200ms;">
+        Moderação inteligente, comandos divertidos, sistema de welcome, logs completos 
+        e muito mais. Tudo em um único bot gratuito e poderoso.
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-up" style="animation-delay: 300ms;">
+        <a href="#" class="btn-hero inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-primary-foreground font-semibold text-lg group">
+          Adicionar ao Discord
+          <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          </svg>
+        </a>
+        <a href="#" class="btn-glass inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-foreground font-semibold text-lg">
+          Ver comandos
+        </a>
+      </div>
+      
+      <!-- Floating bot preview -->
+      <div class="mt-16 relative animate-fade-up" style="animation-delay: 400ms;">
+        <div class="glass rounded-2xl p-6 max-w-md mx-auto animate-float">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+              <span class="text-xl">🤖</span>
+            </div>
+            <div class="text-left">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="font-semibold text-foreground">NexusBot</span>
+                <span class="px-2 py-0.5 rounded text-xs bg-primary/20 text-primary font-medium">BOT</span>
+              </div>
+              <p class="text-muted-foreground text-sm">
+                Olá! 👋 Estou pronto para turbinar seu servidor. Use <span class="text-accent font-mono">/help</span> para ver todos os comandos!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@Lovable" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
+  <!-- Stats Section -->
+  <section class="section-padding">
+    <div class="max-w-6xl mx-auto">
+      <div class="glass rounded-2xl p-8 md:p-12">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div class="text-center">
+            <div class="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-4">
+              <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/>
+              </svg>
+            </div>
+            <div class="text-3xl md:text-4xl font-bold text-foreground mb-1">15,000+</div>
+            <div class="text-muted-foreground text-sm">Servidores</div>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-4">
+              <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+              </svg>
+            </div>
+            <div class="text-3xl md:text-4xl font-bold text-foreground mb-1">2M+</div>
+            <div class="text-muted-foreground text-sm">Usuários</div>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-4">
+              <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+              </svg>
+            </div>
+            <div class="text-3xl md:text-4xl font-bold text-foreground mb-1">50M+</div>
+            <div class="text-muted-foreground text-sm">Comandos/mês</div>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-4">
+              <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+              </svg>
+            </div>
+            <div class="text-3xl md:text-4xl font-bold text-foreground mb-1">99.9%</div>
+            <div class="text-muted-foreground text-sm">Uptime</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+  <!-- Features Section -->
+  <section class="section-padding relative" id="features">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent pointer-events-none"></div>
+    
+    <div class="max-w-7xl mx-auto relative z-10">
+      <div class="text-center mb-16">
+        <span class="text-accent font-semibold text-sm tracking-wider uppercase">Recursos</span>
+        <h2 class="text-3xl md:text-5xl font-bold mt-3 mb-4">
+          Tudo que seu servidor <span class="text-gradient">precisa</span>
+        </h2>
+        <p class="text-muted-foreground text-lg max-w-2xl mx-auto">
+          Funcionalidades poderosas desenvolvidas para transformar a experiência do seu servidor Discord.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Feature 1 -->
+        <div class="glass rounded-xl p-6 hover-lift cursor-default group">
+          <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center mb-4 group-hover:bg-primary/30 transition-colors">
+            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2 text-foreground">Moderação Inteligente</h3>
+          <p class="text-muted-foreground">Sistema de moderação automática com detecção de spam, palavras proibidas e flood em tempo real.</p>
+        </div>
+        
+        <!-- Feature 2 -->
+        <div class="glass rounded-xl p-6 hover-lift cursor-default group">
+          <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center mb-4 group-hover:bg-primary/30 transition-colors">
+            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2 text-foreground">Comandos Rápidos</h3>
+          <p class="text-muted-foreground">Mais de 100 comandos otimizados para diversão, utilidades e gerenciamento do servidor.</p>
+        </div>
+        
+        <!-- Feature 3 -->
+        <div class="glass rounded-xl p-6 hover-lift cursor-default group">
+          <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center mb-4 group-hover:bg-primary/30 transition-colors">
+            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2 text-foreground">Anti-Raid Protection</h3>
+          <p class="text-muted-foreground">Proteção avançada contra invasões e ataques coordenados ao seu servidor.</p>
+        </div>
+        
+        <!-- Feature 4 -->
+        <div class="glass rounded-xl p-6 hover-lift cursor-default group">
+          <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center mb-4 group-hover:bg-primary/30 transition-colors">
+            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2 text-foreground">Sistema de Welcome</h3>
+          <p class="text-muted-foreground">Mensagens personalizadas de boas-vindas com imagens, cargos automáticos e muito mais.</p>
+        </div>
+        
+        <!-- Feature 5 -->
+        <div class="glass rounded-xl p-6 hover-lift cursor-default group">
+          <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center mb-4 group-hover:bg-primary/30 transition-colors">
+            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2 text-foreground">Logs Completos</h3>
+          <p class="text-muted-foreground">Registre todas as ações do servidor: edições, exclusões, entradas e saídas de membros.</p>
+        </div>
+        
+        <!-- Feature 6 -->
+        <div class="glass rounded-xl p-6 hover-lift cursor-default group">
+          <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center mb-4 group-hover:bg-primary/30 transition-colors">
+            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2 text-foreground">Dashboard Web</h3>
+          <p class="text-muted-foreground">Configure tudo pelo navegador com nosso painel intuitivo e responsivo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="section-padding" id="how-it-works">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16">
+        <span class="text-accent font-semibold text-sm tracking-wider uppercase">Como funciona</span>
+        <h2 class="text-3xl md:text-5xl font-bold mt-3 mb-4">
+          Simples como <span class="text-gradient">1, 2, 3</span>
+        </h2>
+        <p class="text-muted-foreground text-lg max-w-2xl mx-auto">
+          Configure em menos de um minuto e transforme seu servidor.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Step 1 -->
+        <div class="relative">
+          <div class="hidden md:block absolute top-12 left-[60%] w-full h-0.5 bg-gradient-to-r from-primary/50 to-transparent"></div>
+          <div class="text-center">
+            <div class="relative inline-block mb-6">
+              <div class="w-24 h-24 rounded-2xl bg-secondary flex items-center justify-center">
+                <svg class="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/>
+                </svg>
+              </div>
+              <span class="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-primary text-primary-foreground text-sm font-bold flex items-center justify-center">01</span>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Adicione ao servidor</h3>
+            <p class="text-muted-foreground">Clique no botão e autorize o bot no seu servidor Discord em poucos segundos.</p>
+          </div>
+        </div>
+        
+        <!-- Step 2 -->
+        <div class="relative">
+          <div class="hidden md:block absolute top-12 left-[60%] w-full h-0.5 bg-gradient-to-r from-primary/50 to-transparent"></div>
+          <div class="text-center">
+            <div class="relative inline-block mb-6">
+              <div class="w-24 h-24 rounded-2xl bg-secondary flex items-center justify-center">
+                <svg class="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                </svg>
+              </div>
+              <span class="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-primary text-primary-foreground text-sm font-bold flex items-center justify-center">02</span>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Configure do seu jeito</h3>
+            <p class="text-muted-foreground">Use comandos simples ou acesse o dashboard web para personalizar todas as funções.</p>
+          </div>
+        </div>
+        
+        <!-- Step 3 -->
+        <div class="relative">
+          <div class="text-center">
+            <div class="relative inline-block mb-6">
+              <div class="w-24 h-24 rounded-2xl bg-secondary flex items-center justify-center">
+                <svg class="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+              </div>
+              <span class="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-primary text-primary-foreground text-sm font-bold flex items-center justify-center">03</span>
+            </div>
+            <h3 class="text-xl font-semibold mb-3">Aproveite!</h3>
+            <p class="text-muted-foreground">Seu servidor está pronto! Explore todos os recursos e eleve a experiência dos membros.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section-padding relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/10 via-transparent to-transparent pointer-events-none"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-3xl opacity-30 pointer-events-none"></div>
+    
+    <div class="max-w-4xl mx-auto text-center relative z-10">
+      <h2 class="text-3xl md:text-5xl font-bold mb-6">
+        Pronto para <span class="text-gradient">revolucionar</span> seu servidor?
+      </h2>
+      <p class="text-muted-foreground text-lg mb-10 max-w-2xl mx-auto">
+        Junte-se a milhares de comunidades que já confiam no NexusBot para moderação, 
+        entretenimento e gerenciamento completo.
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#" class="btn-hero inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-primary-foreground font-semibold text-lg group">
+          Adicionar ao Discord
+          <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+          </svg>
+        </a>
+        <a href="#" class="btn-glass inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-foreground font-semibold text-lg">
+          Servidor de Suporte
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+          </svg>
+        </a>
+      </div>
+      
+      <p class="text-muted-foreground text-sm mt-6">
+        ✓ Grátis para sempre &nbsp;&nbsp; ✓ Sem cartão de crédito &nbsp;&nbsp; ✓ Setup instantâneo
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-border py-12 px-6">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+            <svg class="w-5 h-5 text-primary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+          </div>
+          <span class="font-bold text-foreground">NexusBot</span>
+        </div>
+        
+        <div class="flex items-center gap-6 text-sm text-muted-foreground">
+          <a href="#" class="hover:text-foreground transition-colors">Termos</a>
+          <a href="#" class="hover:text-foreground transition-colors">Privacidade</a>
+          <a href="#" class="hover:text-foreground transition-colors">Contato</a>
+        </div>
+        
+        <p class="text-sm text-muted-foreground flex items-center gap-1">
+          Feito com <svg class="w-4 h-4 text-destructive" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> para a comunidade
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Close mobile menu when clicking a link
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+      });
+    });
+  </script>
+</body>
 </html>
