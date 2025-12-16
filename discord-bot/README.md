@@ -1,0 +1,167 @@
+# 🤖 Nexus Bot - Discord Bot
+
+Bot Discord multifuncional com **100+ comandos**, incluindo integração com ScriptBlox!
+
+## ✨ Funcionalidades
+
+### 🔍 ScriptBlox Integration
+- `/scriptsearch [query]` - Busca scripts no ScriptBlox
+- `/scripttop` - Scripts mais populares
+- `/scriptrecent` - Scripts mais recentes
+- `/scriptgame [game]` - Scripts por jogo
+
+### 🔨 Moderação
+- Ban, Kick, Mute, Warn
+- Purge, Lock, Unlock, Nuke
+- AutoMod, AntiSpam
+- Sistema de avisos
+
+### 🎮 Diversão
+- 8ball, Coinflip, Dice, RPS
+- Ship, Hug, Kiss, Slap
+- Rate, Mock, Choose
+- Memes e piadas
+
+### 💰 Economia
+- Balance, Daily, Weekly
+- Work, Crime, Rob
+- Shop, Inventory, Gambling
+- Slots, Blackjack
+
+### 📊 Níveis
+- Sistema de XP automático
+- Rank e Leaderboards
+- Recompensas por nível
+
+### 🎵 Música
+- Play, Pause, Skip, Stop
+- Queue, Loop, Shuffle
+- Volume control
+
+### 🎉 Giveaways
+- Criar sorteios
+- Reroll, End
+
+### 🎫 Tickets
+- Sistema de suporte
+- Add/Remove users
+
+### ⚙️ Configuração
+- Welcome/Leave messages
+- Logs, AutoRole
+- Sugestões
+
+## 🚀 Instalação
+
+### 1. Pré-requisitos
+- [Node.js](https://nodejs.org/) v18+
+- [Git](https://git-scm.com/)
+- Conta no [Discord Developer Portal](https://discord.com/developers/applications)
+
+### 2. Criar Bot no Discord
+
+1. Acesse [Discord Developer Portal](https://discord.com/developers/applications)
+2. Clique em "New Application"
+3. Dê um nome ao seu bot
+4. Vá em "Bot" no menu lateral
+5. Clique em "Add Bot"
+6. Copie o **Token** (guarde em segredo!)
+7. Ative as intents:
+   - `PRESENCE INTENT`
+   - `SERVER MEMBERS INTENT`
+   - `MESSAGE CONTENT INTENT`
+
+### 3. Convidar o Bot
+
+1. Vá em "OAuth2" > "URL Generator"
+2. Selecione:
+   - Scopes: `bot`, `applications.commands`
+   - Permissions: `Administrator` (ou permissões específicas)
+3. Copie a URL e abra no navegador
+4. Selecione seu servidor
+
+### 4. Configurar e Rodar
+
+```bash
+# Clone o repositório
+git clone https://github.com/seu-usuario/nexus-bot.git
+cd nexus-bot/discord-bot
+
+# Instale as dependências
+npm install
+
+# Configure as variáveis de ambiente
+cp .env.example .env
+# Edite o .env com seu token
+
+# Inicie o bot
+npm start
+```
+
+### 5. Variáveis de Ambiente
+
+Crie um arquivo `.env` com:
+
+```env
+DISCORD_TOKEN=seu_token_aqui
+CLIENT_ID=seu_client_id
+GUILD_ID=seu_guild_id  # opcional
+```
+
+## 📝 Comandos Disponíveis (100+)
+
+| Categoria | Comandos |
+|-----------|----------|
+| ScriptBlox | `scriptsearch`, `scripttop`, `scriptrecent`, `scriptgame`, `scriptinfo` |
+| Moderação | `ban`, `kick`, `mute`, `unmute`, `warn`, `warnings`, `clearwarnings`, `purge`, `slowmode`, `lock`, `unlock`, `nuke`, `automod`, `antispam` |
+| Utilidades | `help`, `ping`, `botinfo`, `serverinfo`, `userinfo`, `avatar`, `banner`, `invite`, `support`, `vote`, `uptime`, `membercount`, `roleinfo`, `channelinfo`, `emojis`, `stickers`, `roles`, `firstmessage`, `snipe`, `editsnipe` |
+| Diversão | `8ball`, `coinflip`, `dice`, `rps`, `meme`, `joke`, `fact`, `quote`, `ship`, `hug`, `slap`, `kiss`, `pat`, `punch`, `wink`, `rate`, `howgay`, `howsmart`, `roast`, `compliment`, `choose`, `reverse`, `ascii`, `mock`, `emojify` |
+| Economia | `balance`, `daily`, `weekly`, `work`, `crime`, `rob`, `pay`, `deposit`, `withdraw`, `leaderboard`, `shop`, `buy`, `inventory`, `use`, `sell`, `gamble`, `slots`, `blackjack` |
+| Níveis | `rank`, `xpleaderboard`, `setxp`, `setlevel` |
+| Música | `play`, `pause`, `resume`, `skip`, `stop`, `queue`, `nowplaying`, `volume`, `loop`, `shuffle` |
+| Giveaway | `giveaway`, `greroll`, `gend` |
+| Tickets | `ticket`, `ticketsetup`, `ticketclose`, `ticketadd`, `ticketremove` |
+| Config | `setwelcome`, `setleave`, `setlogs`, `autorole`, `setsuggestions`, `setprefix` |
+| Outros | `poll`, `quickpoll`, `suggest`, `afk`, `remind`, `todo`, `calc`, `weather`, `translate`, `color`, `qrcode`, `screenshot`, `github` |
+
+## 🌐 Hospedagem Gratuita
+
+### Railway (Recomendado)
+1. Acesse [railway.app](https://railway.app)
+2. Conecte seu GitHub
+3. Importe o repositório
+4. Adicione a variável `DISCORD_TOKEN`
+5. Deploy automático!
+
+### Heroku
+1. Crie uma conta em [heroku.com](https://heroku.com)
+2. Crie um novo app
+3. Conecte ao GitHub
+4. Adicione as Config Vars
+5. Deploy!
+
+### Replit
+1. Importe de GitHub em [replit.com](https://replit.com)
+2. Adicione Secrets com o token
+3. Configure o run command: `node index.js`
+4. Use UptimeRobot para manter online
+
+## 🛠️ Desenvolvimento
+
+```bash
+# Modo desenvolvimento (com hot reload)
+npm run dev
+```
+
+## 📄 Licença
+
+MIT License - use como quiser!
+
+## 🤝 Suporte
+
+- Discord: [Servidor de Suporte](https://discord.gg/seu-servidor)
+- Issues: Use a aba Issues do GitHub
+
+---
+
+Feito com ❤️ para a comunidade Discord
