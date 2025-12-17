@@ -2,13 +2,22 @@
 
 Bot Discord multifuncional com **100+ comandos**, incluindo integração com ScriptBlox!
 
+## 📝 Prefixo
+
+O prefixo padrão é `.` (ponto). Exemplo:
+- `.help` - Ver todos os comandos
+- `.scriptsearch blox fruits` - Buscar scripts
+- `.balance` - Ver seu saldo
+
+Você pode alterar o prefixo por servidor usando `.setprefix <novo prefixo>`
+
 ## ✨ Funcionalidades
 
 ### 🔍 ScriptBlox Integration
-- `/scriptsearch [query]` - Busca scripts no ScriptBlox
-- `/scripttop` - Scripts mais populares
-- `/scriptrecent` - Scripts mais recentes
-- `/scriptgame [game]` - Scripts por jogo
+- `.scriptsearch [query]` - Busca scripts no ScriptBlox
+- `.scripttop` - Scripts mais populares
+- `.scriptrecent` - Scripts mais recentes
+- `.scriptgame [game]` - Scripts por jogo
 
 ### 🔨 Moderação
 - Ban, Kick, Mute, Warn
@@ -75,7 +84,7 @@ Bot Discord multifuncional com **100+ comandos**, incluindo integração com Scr
 
 1. Vá em "OAuth2" > "URL Generator"
 2. Selecione:
-   - Scopes: `bot`, `applications.commands`
+   - Scopes: `bot`
    - Permissions: `Administrator` (ou permissões específicas)
 3. Copie a URL e abra no navegador
 4. Selecione seu servidor
@@ -104,25 +113,21 @@ Crie um arquivo `.env` com:
 
 ```env
 DISCORD_TOKEN=seu_token_aqui
-CLIENT_ID=seu_client_id
-GUILD_ID=seu_guild_id  # opcional
 ```
 
 ## 📝 Comandos Disponíveis (100+)
 
+Todos os comandos usam o prefixo `.` (ou o prefixo customizado do servidor)
+
 | Categoria | Comandos |
 |-----------|----------|
-| ScriptBlox | `scriptsearch`, `scripttop`, `scriptrecent`, `scriptgame`, `scriptinfo` |
-| Moderação | `ban`, `kick`, `mute`, `unmute`, `warn`, `warnings`, `clearwarnings`, `purge`, `slowmode`, `lock`, `unlock`, `nuke`, `automod`, `antispam` |
-| Utilidades | `help`, `ping`, `botinfo`, `serverinfo`, `userinfo`, `avatar`, `banner`, `invite`, `support`, `vote`, `uptime`, `membercount`, `roleinfo`, `channelinfo`, `emojis`, `stickers`, `roles`, `firstmessage`, `snipe`, `editsnipe` |
-| Diversão | `8ball`, `coinflip`, `dice`, `rps`, `meme`, `joke`, `fact`, `quote`, `ship`, `hug`, `slap`, `kiss`, `pat`, `punch`, `wink`, `rate`, `howgay`, `howsmart`, `roast`, `compliment`, `choose`, `reverse`, `ascii`, `mock`, `emojify` |
-| Economia | `balance`, `daily`, `weekly`, `work`, `crime`, `rob`, `pay`, `deposit`, `withdraw`, `leaderboard`, `shop`, `buy`, `inventory`, `use`, `sell`, `gamble`, `slots`, `blackjack` |
-| Níveis | `rank`, `xpleaderboard`, `setxp`, `setlevel` |
-| Música | `play`, `pause`, `resume`, `skip`, `stop`, `queue`, `nowplaying`, `volume`, `loop`, `shuffle` |
-| Giveaway | `giveaway`, `greroll`, `gend` |
-| Tickets | `ticket`, `ticketsetup`, `ticketclose`, `ticketadd`, `ticketremove` |
-| Config | `setwelcome`, `setleave`, `setlogs`, `autorole`, `setsuggestions`, `setprefix` |
-| Outros | `poll`, `quickpoll`, `suggest`, `afk`, `remind`, `todo`, `calc`, `weather`, `translate`, `color`, `qrcode`, `screenshot`, `github` |
+| ScriptBlox | `.scriptsearch`, `.scripttop`, `.scriptrecent`, `.scriptgame` |
+| Moderação | `.ban`, `.kick`, `.mute`, `.unmute`, `.warn`, `.warnings`, `.clearwarnings`, `.purge`, `.slowmode`, `.lock`, `.unlock`, `.setprefix` |
+| Utilidades | `.help`, `.ping`, `.botinfo`, `.serverinfo`, `.userinfo`, `.avatar`, `.banner`, `.invite`, `.uptime`, `.membercount`, `.emojis`, `.roles`, `.snipe`, `.editsnipe` |
+| Diversão | `.8ball`, `.coinflip`, `.dice`, `.rps`, `.meme`, `.ship`, `.hug`, `.slap`, `.kiss`, `.pat`, `.punch`, `.rate`, `.howgay`, `.howsmart`, `.choose`, `.reverse`, `.mock`, `.emojify` |
+| Economia | `.balance`, `.daily`, `.weekly`, `.work`, `.crime`, `.rob`, `.pay`, `.deposit`, `.withdraw`, `.leaderboard`, `.gamble`, `.slots` |
+| Níveis | `.rank`, `.xpleaderboard` |
+| Outros | `.poll`, `.quickpoll`, `.afk`, `.remind`, `.calc`, `.github`, `.qrcode`, `.color` |
 
 ## 🌐 Hospedagem Gratuita
 
