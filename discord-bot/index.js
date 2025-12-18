@@ -93,9 +93,9 @@ function getMentionedChannel(message, args) {
 // SCRIPTBLOX API FUNCTIONS
 // ============================================
 
-async function searchScriptBlox(query) {
+async function searchScriptBlox(query, page = 1) {
   try {
-    const response = await axios.get(`https://scriptblox.com/api/script/search?q=${encodeURIComponent(query)}&max=10`);
+    const response = await axios.get(`https://scriptblox.com/api/script/search?q=${encodeURIComponent(query)}&page=${page}&max=5`);
     return response.data;
   } catch (error) {
     console.error('Erro ao buscar no ScriptBlox:', error);
@@ -103,9 +103,9 @@ async function searchScriptBlox(query) {
   }
 }
 
-async function getScriptBloxTop() {
+async function getScriptBloxTop(page = 1) {
   try {
-    const response = await axios.get('https://scriptblox.com/api/script/fetch?page=1&max=10');
+    const response = await axios.get(`https://scriptblox.com/api/script/fetch?page=${page}&max=5`);
     return response.data;
   } catch (error) {
     console.error('Erro ao buscar top scripts:', error);
@@ -113,9 +113,9 @@ async function getScriptBloxTop() {
   }
 }
 
-async function getScriptBloxRecent() {
+async function getScriptBloxRecent(page = 1) {
   try {
-    const response = await axios.get('https://scriptblox.com/api/script/fetch?page=1&max=10&sort=date');
+    const response = await axios.get(`https://scriptblox.com/api/script/fetch?page=${page}&max=5&sort=date`);
     return response.data;
   } catch (error) {
     console.error('Erro ao buscar scripts recentes:', error);
@@ -123,14 +123,75 @@ async function getScriptBloxRecent() {
   }
 }
 
-async function searchScriptBloxByGame(game) {
+async function searchScriptBloxByGame(game, page = 1) {
   try {
-    const response = await axios.get(`https://scriptblox.com/api/script/search?q=${encodeURIComponent(game)}&max=10&mode=game`);
+    const response = await axios.get(`https://scriptblox.com/api/script/search?q=${encodeURIComponent(game)}&page=${page}&max=5&mode=game`);
     return response.data;
   } catch (error) {
     console.error('Erro ao buscar scripts por jogo:', error);
     return null;
   }
+}
+
+// Armazenar dados de paginação
+const scriptSearchCache = new Map();
+
+function createScriptEmbed(scripts, title, page, totalPages, color = '#5865F2') {
+  const embed = new EmbedBuilder()
+    .setColor(color)
+    .setTitle(title)
+    .setDescription(`📄 Página ${page} de ${totalPages}`)
+    .setFooter({ text: 'ScriptBlox • Powered by Nexus Bot' })
+    .setTimestamp();
+
+  scripts.forEach((script, index) => {
+    const gameInfo = script.game ? `🎮 ${script.game.name}` : '🎮 Universal';
+    const views = script.views || 0;
+    const verified = script.verified ? ' ✅' : '';
+    const key = script.key ? ' 🔑' : '';
+
+    embed.addFields({
+      name: `${(page - 1) * 5 + index + 1}. ${script.title}${verified}${key}`,
+      value: `${gameInfo}\n👁️ ${views.toLocaleString()} views\n[📜 Ver Script](https://scriptblox.com/script/${script.slug})`,
+      inline: true
+    });
+  });
+
+  return embed;
+}
+
+function createPaginationButtons(page, totalPages, type, query = '') {
+  const row = new ActionRowBuilder();
+  
+  row.addComponents(
+    new ButtonBuilder()
+      .setCustomId(`script_first_${type}_${query}`)
+      .setEmoji('⏮️')
+      .setStyle(ButtonStyle.Secondary)
+      .setDisabled(page <= 1),
+    new ButtonBuilder()
+      .setCustomId(`script_prev_${type}_${query}`)
+      .setEmoji('◀️')
+      .setStyle(ButtonStyle.Primary)
+      .setDisabled(page <= 1),
+    new ButtonBuilder()
+      .setCustomId(`script_page_${type}`)
+      .setLabel(`${page}/${totalPages}`)
+      .setStyle(ButtonStyle.Secondary)
+      .setDisabled(true),
+    new ButtonBuilder()
+      .setCustomId(`script_next_${type}_${query}`)
+      .setEmoji('▶️')
+      .setStyle(ButtonStyle.Primary)
+      .setDisabled(page >= totalPages),
+    new ButtonBuilder()
+      .setCustomId(`script_last_${type}_${query}`)
+      .setEmoji('⏭️')
+      .setStyle(ButtonStyle.Secondary)
+      .setDisabled(page >= totalPages)
+  );
+
+  return row;
 }
 
 // ============================================
@@ -199,7 +260,7 @@ client.on('messageCreate', async message => {
       if (!query) return message.reply(`❌ Use: \`${prefix}scriptsearch <termo>\``);
 
       const loadingMsg = await message.reply('🔍 Buscando scripts...');
-      const data = await searchScriptBlox(query);
+      const data = await searchScriptBlox(query, 1);
 
       if (!data || !data.result || !data.result.scripts || data.result.scripts.length === 0) {
         return loadingMsg.edit({
@@ -212,79 +273,51 @@ client.on('messageCreate', async message => {
         });
       }
 
-      const scripts = data.result.scripts.slice(0, 5);
-      const embed = new EmbedBuilder()
-        .setColor('#5865F2')
-        .setTitle(`🔍 Resultados para: ${query}`)
-        .setDescription(`Encontrados ${data.result.totalPages * 10}+ scripts`)
-        .setFooter({ text: 'ScriptBlox • Powered by Nexus Bot' })
-        .setTimestamp();
+      const scripts = data.result.scripts;
+      const totalPages = data.result.totalPages || 1;
+      
+      const embed = createScriptEmbed(scripts, `🔍 Resultados para: ${query}`, 1, totalPages);
+      const buttons = createPaginationButtons(1, totalPages, 'search', query);
 
-      scripts.forEach((script, index) => {
-        const gameInfo = script.game ? `🎮 ${script.game.name}` : '🎮 Universal';
-        const views = script.views || 0;
-        const verified = script.verified ? '✅' : '';
+      // Salvar cache para paginação
+      const cacheKey = `search_${message.author.id}`;
+      scriptSearchCache.set(cacheKey, { query, type: 'search' });
 
-        embed.addFields({
-          name: `${index + 1}. ${script.title} ${verified}`,
-          value: `${gameInfo}\n👁️ ${views.toLocaleString()} views\n[Ver Script](https://scriptblox.com/script/${script.slug})`,
-          inline: true
-        });
-      });
-
-      return loadingMsg.edit({ content: null, embeds: [embed] });
+      return loadingMsg.edit({ content: null, embeds: [embed], components: totalPages > 1 ? [buttons] : [] });
     }
 
     if (command === 'scripttop') {
       const loadingMsg = await message.reply('🔍 Buscando scripts populares...');
-      const data = await getScriptBloxTop();
+      const data = await getScriptBloxTop(1);
 
       if (!data || !data.result || !data.result.scripts) {
         return loadingMsg.edit('❌ Erro ao buscar scripts populares.');
       }
 
-      const scripts = data.result.scripts.slice(0, 10);
-      const embed = new EmbedBuilder()
-        .setColor('#FFD700')
-        .setTitle('🏆 Scripts Mais Populares')
-        .setFooter({ text: 'ScriptBlox • Powered by Nexus Bot' })
-        .setTimestamp();
+      const scripts = data.result.scripts;
+      const totalPages = data.result.totalPages || 1;
+      
+      const embed = createScriptEmbed(scripts, '🏆 Scripts Mais Populares', 1, totalPages, '#FFD700');
+      const buttons = createPaginationButtons(1, totalPages, 'top');
 
-      scripts.forEach((script, index) => {
-        embed.addFields({
-          name: `#${index + 1} ${script.title}`,
-          value: `👁️ ${(script.views || 0).toLocaleString()} views`,
-          inline: true
-        });
-      });
-
-      return loadingMsg.edit({ content: null, embeds: [embed] });
+      return loadingMsg.edit({ content: null, embeds: [embed], components: totalPages > 1 ? [buttons] : [] });
     }
 
     if (command === 'scriptrecent') {
       const loadingMsg = await message.reply('🔍 Buscando scripts recentes...');
-      const data = await getScriptBloxRecent();
+      const data = await getScriptBloxRecent(1);
 
       if (!data || !data.result || !data.result.scripts) {
         return loadingMsg.edit('❌ Erro ao buscar scripts recentes.');
       }
 
-      const scripts = data.result.scripts.slice(0, 10);
-      const embed = new EmbedBuilder()
-        .setColor('#00FF00')
-        .setTitle('🆕 Scripts Mais Recentes')
-        .setFooter({ text: 'ScriptBlox • Powered by Nexus Bot' })
-        .setTimestamp();
+      const scripts = data.result.scripts;
+      const totalPages = data.result.totalPages || 1;
+      
+      const embed = createScriptEmbed(scripts, '🆕 Scripts Mais Recentes', 1, totalPages, '#00FF00');
+      const buttons = createPaginationButtons(1, totalPages, 'recent');
 
-      scripts.forEach((script, index) => {
-        embed.addFields({
-          name: `${index + 1}. ${script.title}`,
-          value: `🎮 ${script.game?.name || 'Universal'}`,
-          inline: true
-        });
-      });
-
-      return loadingMsg.edit({ content: null, embeds: [embed] });
+      return loadingMsg.edit({ content: null, embeds: [embed], components: totalPages > 1 ? [buttons] : [] });
     }
 
     if (command === 'scriptgame') {
@@ -292,7 +325,7 @@ client.on('messageCreate', async message => {
       if (!game) return message.reply(`❌ Use: \`${prefix}scriptgame <nome do jogo>\``);
 
       const loadingMsg = await message.reply('🔍 Buscando scripts para o jogo...');
-      const data = await searchScriptBloxByGame(game);
+      const data = await searchScriptBloxByGame(game, 1);
 
       if (!data || !data.result || !data.result.scripts || data.result.scripts.length === 0) {
         return loadingMsg.edit({
@@ -305,22 +338,48 @@ client.on('messageCreate', async message => {
         });
       }
 
-      const scripts = data.result.scripts.slice(0, 5);
-      const embed = new EmbedBuilder()
-        .setColor('#5865F2')
-        .setTitle(`🎮 Scripts para: ${game}`)
-        .setFooter({ text: 'ScriptBlox • Powered by Nexus Bot' })
-        .setTimestamp();
+      const scripts = data.result.scripts;
+      const totalPages = data.result.totalPages || 1;
+      
+      const embed = createScriptEmbed(scripts, `🎮 Scripts para: ${game}`, 1, totalPages);
+      const buttons = createPaginationButtons(1, totalPages, 'game', game);
 
-      scripts.forEach((script, index) => {
-        embed.addFields({
-          name: `${index + 1}. ${script.title}`,
-          value: `👁️ ${(script.views || 0).toLocaleString()} views\n[Ver Script](https://scriptblox.com/script/${script.slug})`,
-          inline: true
-        });
-      });
+      return loadingMsg.edit({ content: null, embeds: [embed], components: totalPages > 1 ? [buttons] : [] });
+    }
 
-      return loadingMsg.edit({ content: null, embeds: [embed] });
+    if (command === 'scriptinfo') {
+      const slug = args[0];
+      if (!slug) return message.reply(`❌ Use: \`${prefix}scriptinfo <slug>\` (encontre o slug na URL do script)`);
+
+      try {
+        const response = await axios.get(`https://scriptblox.com/api/script/${slug}`);
+        const script = response.data.script;
+
+        if (!script) return message.reply('❌ Script não encontrado.');
+
+        const embed = new EmbedBuilder()
+          .setColor('#5865F2')
+          .setTitle(`📜 ${script.title}`)
+          .setURL(`https://scriptblox.com/script/${script.slug}`)
+          .addFields(
+            { name: '🎮 Jogo', value: script.game?.name || 'Universal', inline: true },
+            { name: '👁️ Views', value: `${(script.views || 0).toLocaleString()}`, inline: true },
+            { name: '✅ Verificado', value: script.verified ? 'Sim' : 'Não', inline: true },
+            { name: '🔑 Key System', value: script.key ? 'Sim' : 'Não', inline: true },
+            { name: '👤 Autor', value: script.owner?.username || 'Desconhecido', inline: true },
+            { name: '📅 Atualizado', value: script.updatedAt ? new Date(script.updatedAt).toLocaleDateString('pt-BR') : 'N/A', inline: true }
+          )
+          .setFooter({ text: 'ScriptBlox • Powered by Nexus Bot' })
+          .setTimestamp();
+
+        if (script.image) {
+          embed.setThumbnail(`https://scriptblox.com${script.image}`);
+        }
+
+        return message.reply({ embeds: [embed] });
+      } catch {
+        return message.reply('❌ Erro ao buscar informações do script.');
+      }
     }
 
     // ==================== UTILITY COMMANDS ====================
@@ -1299,6 +1358,94 @@ client.on('messageUpdate', (oldMessage, newMessage) => {
       newContent: newMessage.content,
       author: oldMessage.author
     });
+  }
+});
+
+// ============================================
+// INTERAÇÕES COM BOTÕES (Paginação ScriptBlox)
+// ============================================
+
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isButton()) return;
+
+  const customId = interaction.customId;
+  if (!customId.startsWith('script_')) return;
+
+  await interaction.deferUpdate();
+
+  const parts = customId.split('_');
+  const action = parts[1]; // first, prev, next, last
+  const type = parts[2]; // search, top, recent, game
+  const query = parts.slice(3).join('_'); // query se houver
+
+  // Extrair página atual do embed
+  const embed = interaction.message.embeds[0];
+  const pageMatch = embed.description?.match(/Página (\d+) de (\d+)/);
+  
+  if (!pageMatch) return;
+
+  let currentPage = parseInt(pageMatch[1]);
+  const totalPages = parseInt(pageMatch[2]);
+  let newPage = currentPage;
+
+  switch (action) {
+    case 'first':
+      newPage = 1;
+      break;
+    case 'prev':
+      newPage = Math.max(1, currentPage - 1);
+      break;
+    case 'next':
+      newPage = Math.min(totalPages, currentPage + 1);
+      break;
+    case 'last':
+      newPage = totalPages;
+      break;
+    default:
+      return;
+  }
+
+  if (newPage === currentPage) return;
+
+  let data;
+  let title;
+  let color;
+
+  try {
+    switch (type) {
+      case 'search':
+        data = await searchScriptBlox(query, newPage);
+        title = `🔍 Resultados para: ${query}`;
+        color = '#5865F2';
+        break;
+      case 'top':
+        data = await getScriptBloxTop(newPage);
+        title = '🏆 Scripts Mais Populares';
+        color = '#FFD700';
+        break;
+      case 'recent':
+        data = await getScriptBloxRecent(newPage);
+        title = '🆕 Scripts Mais Recentes';
+        color = '#00FF00';
+        break;
+      case 'game':
+        data = await searchScriptBloxByGame(query, newPage);
+        title = `🎮 Scripts para: ${query}`;
+        color = '#5865F2';
+        break;
+    }
+
+    if (!data || !data.result || !data.result.scripts) {
+      return interaction.followUp({ content: '❌ Erro ao carregar página.', ephemeral: true });
+    }
+
+    const scripts = data.result.scripts;
+    const newEmbed = createScriptEmbed(scripts, title, newPage, totalPages, color);
+    const buttons = createPaginationButtons(newPage, totalPages, type, query);
+
+    await interaction.editReply({ embeds: [newEmbed], components: [buttons] });
+  } catch (error) {
+    console.error('Erro na paginação:', error);
   }
 });
 
