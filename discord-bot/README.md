@@ -18,6 +18,9 @@ Você pode alterar o prefixo por servidor usando `.setprefix <novo prefixo>`
 - `.scripttop` - Scripts mais populares
 - `.scriptrecent` - Scripts mais recentes
 - `.scriptgame [game]` - Scripts por jogo
+- `.scriptinfo [slug]` - Informações detalhadas de um script
+
+**✨ Navegação por Botões**: Use os botões ⏮️ ◀️ ▶️ ⏭️ para navegar entre páginas de resultados!
 
 ### 🔨 Moderação
 - Ban, Kick, Mute, Warn
@@ -121,7 +124,7 @@ Todos os comandos usam o prefixo `.` (ou o prefixo customizado do servidor)
 
 | Categoria | Comandos |
 |-----------|----------|
-| ScriptBlox | `.scriptsearch`, `.scripttop`, `.scriptrecent`, `.scriptgame` |
+| ScriptBlox | `.scriptsearch`, `.scripttop`, `.scriptrecent`, `.scriptgame`, `.scriptinfo` |
 | Moderação | `.ban`, `.kick`, `.mute`, `.unmute`, `.warn`, `.warnings`, `.clearwarnings`, `.purge`, `.slowmode`, `.lock`, `.unlock`, `.setprefix` |
 | Utilidades | `.help`, `.ping`, `.botinfo`, `.serverinfo`, `.userinfo`, `.avatar`, `.banner`, `.invite`, `.uptime`, `.membercount`, `.emojis`, `.roles`, `.snipe`, `.editsnipe` |
 | Diversão | `.8ball`, `.coinflip`, `.dice`, `.rps`, `.meme`, `.ship`, `.hug`, `.slap`, `.kiss`, `.pat`, `.punch`, `.rate`, `.howgay`, `.howsmart`, `.choose`, `.reverse`, `.mock`, `.emojify` |
